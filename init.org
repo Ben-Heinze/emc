@@ -2141,8 +2141,8 @@ The biggest reason many choose to use emacs is [[https://orgmode.org/][org-mode]
 ;; ("b" "research" plain (file "~/org-roam/study/templates/research.org")
 ;; :target (file+head "study/%<%Y%m%d%H%M%S>-${slug}.org"
 ;; "#+title: ${title}\n")
-   :unnarrowed t)
-)
+;;   :unnarrowed t)
+))
 
 
 
