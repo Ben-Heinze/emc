@@ -2296,6 +2296,29 @@ Doomemacs has some nice [[https://github.com/doomemacs/themes][themes]]. I use `
 
 
 
+* fzf-async
+
+#+begin_src emacs-lisp :tangle init.el
+
+(use-package fzf-native
+  :ensure (:host github :repo "dangduc/fzf-native")
+  :config
+  (fzf-native-load-dyn))
+
+(use-package fussy
+  :ensure (:host github :repo "jojojames/fussy")
+  :config
+  (fussy-setup-fzf)
+  (fussy-eglot-setup)
+  (fussy-company-setup))
+
+(use-package fzf-async
+  :ensure (:host github :repo "jojojames/fzf-async")
+  :config
+  (fzf-async-setup))
+
+#+END_SRC
+
 * Language Specific
 
 #+BEGIN_SRC emacs-lisp :tangle init.el
