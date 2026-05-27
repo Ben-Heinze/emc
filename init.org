@@ -2080,6 +2080,7 @@ The biggest reason many choose to use emacs is [[https://orgmode.org/][org-mode]
     			       '((python . t)
     				  (C . t)
     				  (R . t)
+    				  (csharp . t)
     				  (js . t)
     				  (octave . t)
     				  (shell . t)
