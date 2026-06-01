@@ -116,7 +116,7 @@ Org Babel PHP blocks currently do not support sessions."
      "ini_set('display_errors', '1');\n"
      "ini_set('log_errors', '0');\n"
      "\n"
-     (org-babel-chomp body)
+     (org-babel-php--strip-tags (org-babel-chomp body))
      "\n"
      (when value?
        (concat
@@ -129,6 +129,20 @@ Org Babel PHP blocks currently do not support sessions."
         "  }\n"
         "}\n"))
      "?>\n")))
+
+(defun org-babel-php--strip-tags (body)
+  "Return BODY with any surrounding PHP open/close tags removed.
+
+This allows blocks to be written either as raw PHP statements, or with
+explicit `<?php ... ?>` tags, without producing nested tags when wrapped."
+  (let ((s body))
+    ;; Drop a leading BOM if present.
+    (setq s (replace-regexp-in-string "\\`\\ufeff" "" s t t))
+    ;; Remove opening tag: allow `<?php` or short `<?`.
+    (setq s (replace-regexp-in-string "\\`[[:space:]\n\r\t]*<\\?\\(?:php\\)?[[:space:]\n\r\t]*" "" s))
+    ;; Remove closing tag, but only if it's at the end (ignoring whitespace).
+    (setq s (replace-regexp-in-string "[[:space:]\n\r\t]*\\?>[[:space:]\n\r\t]*\\'" "" s))
+    s))
 
 (defun org-babel-php-table-or-string (results)
   "Convert RESULTS into an appropriate elisp value.
