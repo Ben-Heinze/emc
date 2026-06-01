@@ -22,6 +22,7 @@
         export PATH="${pkgs.gcc}/bin:$PATH"
         export PATH="${pkgs.libtool}/bin:$PATH"
         export PATH="${pkgs.R}/bin:$PATH"
+        export PATH="${pkgs.php}/bin:$PATH"
         cd "$CACHE_DIR"
         ${pkgs.emacs-unstable}/bin/emacs --batch -l ./tangle-script.el 
         exec ${pkgs.emacs-unstable}/bin/emacs --init-dir "$CACHE_DIR" --chdir $HOME "$@"
@@ -44,6 +45,7 @@
 	  pkgs.gcc
 	  pkgs.libtool
 	  pkgs.R
+	  pkgs.php
 	  pkgs.copilot-language-server
 	  pkgs.emacs
 	  ];
