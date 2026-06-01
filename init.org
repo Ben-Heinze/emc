@@ -268,6 +268,9 @@ the [[https://github.com/progfolio/elpaca/blob/master/doc/manual.md][manual webs
   ;; Enable use-package :ensure support for Elpaca.
   (elpaca-use-package-mode))
 
+;; Ensure repo-local .el files in the init dir are require'able (e.g. ./ob-php.el).
+(add-to-list 'load-path user-emacs-directory)
+
 #+END_SRC
 
 
@@ -2121,6 +2124,7 @@ The biggest reason many choose to use emacs is [[https://orgmode.org/][org-mode]
     				  (perl . t)
     				  )
     			       )
+    (add-to-list 'load-path user-emacs-directory)
     (require 'ob-php)
     (setq org-babel-php-command "php")
     (setq org-latex-pdf-process '("xelatex -interaction nonstopmode -output-directory %o %f"))
@@ -2363,4 +2367,3 @@ A place to put private things:
 #+BEGIN_SRC emacs-lisp :tangle init.el
 (load "~/.private/private.el")
 #+END_SRC
-
