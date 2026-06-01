@@ -2068,7 +2068,7 @@ This repo includes a small `ob-php.el` implementation to make `#+begin_src php` 
 
 Example:
 
-#+begin_src org
+#+begin_src org :tangle no
 #+begin_src php :results value
 $result = ["hello" => "world", "n" => 2 + 3];
 #+end_src
