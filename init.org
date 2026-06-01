@@ -2056,6 +2056,21 @@ Emacs interface.
   :ensure t)
 #+END_SRC
 
+*** PHP (org-babel)
+
+This repo includes a small `ob-php.el` implementation to make `#+begin_src php` blocks work.
+
+- `:results output` (default): return stdout
+- `:results value`: set `$result` in the block, and that value is returned (arrays/objects are JSON-encoded)
+
+Example:
+
+#+begin_src org
+#+begin_src php :results value
+$result = ["hello" => "world", "n" => 2 + 3];
+#+end_src
+#+end_src
+
 *** ob-crystal
 
 #+BEGIN_SRC emacs-lisp :tangle init.el
@@ -2348,5 +2363,4 @@ A place to put private things:
 #+BEGIN_SRC emacs-lisp :tangle init.el
 (load "~/.private/private.el")
 #+END_SRC
-
 
