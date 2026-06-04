@@ -108,6 +108,9 @@ func main() {
 (display "Hello, World!")
 #+end_src
 
+#+RESULTS:
+: Hello, World!
+
 ** JavaScript
 #+begin_src js :results output
 console.log("Hello, World!");

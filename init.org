@@ -2231,6 +2231,7 @@ The biggest reason many choose to use emacs is [[https://orgmode.org/][org-mode]
     				  (php . t)
     				  (java . t)
     				  (lua . t)
+				  (ocaml . t)
     				  (ruby . t)
     				  (maxima . t)
     				  (latex . t)
@@ -2246,6 +2247,59 @@ The biggest reason many choose to use emacs is [[https://orgmode.org/][org-mode]
     (add-to-list 'load-path user-emacs-directory)
     (require 'ob-php)
     (setq org-babel-php-command "php")
+    (with-eval-after-load 'ob-ocaml
+      ;; `ob-ocaml' inserts the phrase into the REPL buffer, but newer
+      ;; Tuareg only sends input when point is sitting on a terminating `;;'.
+      ;; Org appends an end-of-evaluation marker after `;;', so the default
+      ;; sender only inserts a newline and the block appears to hang.
+      (defun my/org-babel-execute:ocaml (body params)
+        "Execute Ocaml BODY according to PARAMS."
+        (let* ((full-body (org-babel-expand-body:generic
+		           body params
+		           (org-babel-variable-assignments:ocaml params)))
+               (session (org-babel-prep-session:ocaml
+		         (cdr (assq :session params)) params))
+               (raw (org-babel-comint-with-output
+		        (session org-babel-ocaml-eoe-output nil full-body)
+		      (insert
+		       (concat
+		        (org-babel-chomp full-body) ";;\n"
+		        org-babel-ocaml-eoe-indicator))
+		      (comint-send-input)))
+	       (clean
+	        (car (let ((re (regexp-quote org-babel-ocaml-eoe-output)) out)
+		       (delq nil (mapcar (lambda (line)
+				           (if out
+					       (progn (setq out nil) line)
+				             (when (string-match re line)
+					       (progn (setq out t) nil))))
+				         (mapcar #'org-trim (reverse raw)))))))
+	       (raw (org-trim clean))
+	       (result-params (cdr (assq :result-params params))))
+          (string-match
+	   "\\(\\(.*\n\\)*\\)[^:\n]+ : \\([^=\n]+\\) =[[:space:]]+\\(\\(.\\|\n\\)+\\)$"
+	   raw)
+          (let ((output (match-string 1 raw))
+	        (type (match-string 3 raw))
+	        (value (match-string 4 raw)))
+            (org-babel-reassemble-table
+	     (org-babel-result-cond result-params
+	       (cond
+	        ((member "verbatim" result-params) raw)
+	        ((member "output" result-params) output)
+	        (t raw))
+	       (if (and value type)
+	           (org-babel-ocaml-parse-output value type)
+	         raw))
+	     (org-babel-pick-name
+	      (cdr (assq :colname-names params)) (cdr (assq :colnames params)))
+	     (org-babel-pick-name
+	      (cdr (assq :rowname-names params)) (cdr (assq :rownames params)))))))
+      (unless (advice-member-p #'my/org-babel-execute:ocaml
+                               'org-babel-execute:ocaml)
+        (advice-add 'org-babel-execute:ocaml
+                    :override
+                    #'my/org-babel-execute:ocaml)))
     (setq org-latex-pdf-process '("xelatex -interaction nonstopmode -output-directory %o %f"))
     (defun update-org-latex-fragments ()
       (org-latex-preview '(64))
