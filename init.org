@@ -1443,7 +1443,7 @@ I use [[https://github.com/noctuid/general.el][general.el]] to setup all of my k
          "zr" '(origami-open-all-nodes :which-key "open all folds")
          "zm" '(origami-close-all-nodes :which-key "close all folds")
          "zM" '(hs-hide-level :which-key "close all at level")
-         "<return>" '(vterm :which-key "vterm"))
+         "<return>" '(mep/create-terminal-buffer-below :which-key "terminal below"))
 
     (general-define-key
        :states '(normal visual insert emacs)
