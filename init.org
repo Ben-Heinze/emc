@@ -355,12 +355,13 @@ in more locations.
   :config
   (setq vterm-shell shell-file-name)
   (define-key vterm-mode-map (kbd "RET") #'vterm-send-return)
-  (define-key vterm-mode-map (kbd "<return>") #'vterm-send-return))
+  (define-key vterm-mode-map (kbd "<return>") #'vterm-send-return)
+  (add-hook 'vterm-mode-hook #'evil-emacs-state))
 
 (with-eval-after-load 'evil
   (evil-ex-define-cmd "term" #'mep/open-terminal)
-  (evil-set-initial-state 'vterm-mode 'insert)
-  (evil-define-key '(insert normal emacs) vterm-mode-map
+  (evil-set-initial-state 'vterm-mode 'emacs)
+  (evil-define-key '(emacs) vterm-mode-map
     (kbd "RET") #'vterm-send-return
     (kbd "<return>") #'vterm-send-return))
 #+END_SRC
