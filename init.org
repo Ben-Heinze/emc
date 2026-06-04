@@ -2220,81 +2220,122 @@ The biggest reason many choose to use emacs is [[https://orgmode.org/][org-mode]
   :after go-mode rust-mode ob-crystal ob-go ob-rust org-contrib
   :config
     (org-babel-do-load-languages 'org-babel-load-languages
-    			       '((python . t)
-    				  (C . t)
-    				  (R . t)
-    				  (csharp . t)
-    				  (scheme . t)
-    				  (js . t)
-    				  (octave . t)
-    				  (shell . t)
-    				  (php . t)
-    				  (java . t)
-    				  (lua . t)
-				  (ocaml . t)
-    				  (ruby . t)
-    				  (maxima . t)
-    				  (latex . t)
-    				  (sqlite . t)
-    				  (fortran . t)
-    				  (go . t)
-    				  (rust . t)
-    				  (crystal . t)
-    				  (awk . t)
-    				  (perl . t)
+    			       '(
+                                   (C . t)
+                                   (R . t)
+                                   (awk . t)
+                                   (crystal . t)
+                                   (csharp . t)
+                                   (fortran . t)
+                                   (go . t)
+                                   (java . t)
+                                   (js . t)
+                                   (latex . t)
+                                   (lua . t)
+                                   (maxima . t)
+                                   (ocaml . t)
+                                   (octave . t)
+                                   (perl . t)
+                                   (php . t)
+                                   (python . t)
+                                   (ruby . t)
+                                   (rust . t)
+                                   (scheme . t)
+                                   (shell . t)
+                                   (sqlite . t)
+                                   (tcl . t)
     				  )
     			       )
     (add-to-list 'load-path user-emacs-directory)
     (require 'ob-php)
     (setq org-babel-php-command "php")
     (with-eval-after-load 'ob-ocaml
+      (require 'ob-eval)
+
       ;; `ob-ocaml' inserts the phrase into the REPL buffer, but newer
       ;; Tuareg only sends input when point is sitting on a terminating `;;'.
       ;; Org appends an end-of-evaluation marker after `;;', so the default
-      ;; sender only inserts a newline and the block appears to hang.
+      ;; sender only inserts a newline and the block appears to hang.  Also,
+      ;; plain non-session `:results output` blocks do not need the REPL at
+      ;; all, so run those through `ocaml` directly.
+      (defun my/org-babel-ocaml--use-session-p (params)
+        "Return non-nil when PARAMS require a live OCaml session."
+        (let ((session (cdr (assq :session params))))
+          (and session (not (string= session "none")))))
+
+      (defun my/org-babel-ocaml--ensure-terminator (body)
+        "Ensure BODY ends with an OCaml phrase terminator."
+        (let ((trimmed (org-babel-chomp body)))
+          (cond
+           ((string-match-p ";;[[:space:]]*\\'" trimmed) trimmed)
+           ((string-match-p ";[[:space:]]*\\'" trimmed) (concat trimmed ";"))
+           (t (concat trimmed ";;")))))
+
+      (defun my/org-babel-ocaml-evaluate-external-process (body)
+        "Execute non-session OCaml BODY in an external process."
+        (org-babel-eval
+         (mapconcat
+          #'shell-quote-argument
+          (list org-babel-ocaml-command
+                "-stdin" "-noinit" "-no-version" "-noprompt")
+          " ")
+         (concat (my/org-babel-ocaml--ensure-terminator body) "\n")))
+
       (defun my/org-babel-execute:ocaml (body params)
         "Execute Ocaml BODY according to PARAMS."
         (let* ((full-body (org-babel-expand-body:generic
 		           body params
 		           (org-babel-variable-assignments:ocaml params)))
-               (session (org-babel-prep-session:ocaml
-		         (cdr (assq :session params)) params))
-               (raw (org-babel-comint-with-output
-		        (session org-babel-ocaml-eoe-output nil full-body)
-		      (insert
-		       (concat
-		        (org-babel-chomp full-body) ";;\n"
-		        org-babel-ocaml-eoe-indicator))
-		      (comint-send-input)))
-	       (clean
-	        (car (let ((re (regexp-quote org-babel-ocaml-eoe-output)) out)
-		       (delq nil (mapcar (lambda (line)
-				           (if out
-					       (progn (setq out nil) line)
-				             (when (string-match re line)
-					       (progn (setq out t) nil))))
-				         (mapcar #'org-trim (reverse raw)))))))
-	       (raw (org-trim clean))
-	       (result-params (cdr (assq :result-params params))))
-          (string-match
-	   "\\(\\(.*\n\\)*\\)[^:\n]+ : \\([^=\n]+\\) =[[:space:]]+\\(\\(.\\|\n\\)+\\)$"
-	   raw)
-          (let ((output (match-string 1 raw))
-	        (type (match-string 3 raw))
-	        (value (match-string 4 raw)))
-            (org-babel-reassemble-table
-	     (org-babel-result-cond result-params
-	       (cond
-	        ((member "verbatim" result-params) raw)
-	        ((member "output" result-params) output)
-	        (t raw))
-	       (if (and value type)
-	           (org-babel-ocaml-parse-output value type)
-	         raw))
-	     (org-babel-pick-name
-	      (cdr (assq :colname-names params)) (cdr (assq :colnames params)))
-	     (org-babel-pick-name
-	      (cdr (assq :rowname-names params)) (cdr (assq :rownames params)))))))
+	       (result-params (cdr (assq :result-params params)))
+               (result-type (cdr (assq :result-type params))))
+          (if (and (not (my/org-babel-ocaml--use-session-p params))
+                   (eq result-type 'output))
+              (let ((raw (my/org-babel-ocaml-evaluate-external-process full-body)))
+                (org-babel-reassemble-table
+	         (org-babel-result-cond result-params raw raw)
+	         (org-babel-pick-name
+	          (cdr (assq :colname-names params)) (cdr (assq :colnames params)))
+	         (org-babel-pick-name
+	          (cdr (assq :rowname-names params)) (cdr (assq :rownames params)))))
+            (let* ((session (org-babel-prep-session:ocaml
+		             (cdr (assq :session params)) params))
+                   (raw (org-babel-comint-with-output
+		            (session org-babel-ocaml-eoe-output nil full-body)
+		          (goto-char (process-mark (get-buffer-process
+					            (current-buffer))))
+		          (insert
+		           (concat
+		            (my/org-babel-ocaml--ensure-terminator full-body) "\n"
+		            org-babel-ocaml-eoe-indicator))
+		          (comint-send-input nil t)))
+	           (clean
+	            (car (let ((re (regexp-quote org-babel-ocaml-eoe-output)) out)
+		           (delq nil (mapcar (lambda (line)
+					       (if out
+						   (progn (setq out nil) line)
+					         (when (string-match re line)
+						   (progn (setq out t) nil))))
+				             (mapcar #'org-trim (reverse raw)))))))
+	           (raw (org-trim clean)))
+              (string-match
+	       "\\(\\(.*\n\\)*\\)[^:\n]+ : \\([^=\n]+\\) =[[:space:]]+\\(\\(.\\|\n\\)+\\)$"
+	       raw)
+              (let ((output (match-string 1 raw))
+	            (type (match-string 3 raw))
+	            (value (match-string 4 raw)))
+                (org-babel-reassemble-table
+	         (org-babel-result-cond result-params
+	           (cond
+	            ((member "verbatim" result-params) raw)
+	            ((member "output" result-params) output)
+	            (t raw))
+	           (if (and value type)
+	               (org-babel-ocaml-parse-output value type)
+	             raw))
+	         (org-babel-pick-name
+	          (cdr (assq :colname-names params)) (cdr (assq :colnames params)))
+	         (org-babel-pick-name
+	          (cdr (assq :rowname-names params)) (cdr (assq :rownames params)))))))))
       (unless (advice-member-p #'my/org-babel-execute:ocaml
                                'org-babel-execute:ocaml)
         (advice-add 'org-babel-execute:ocaml

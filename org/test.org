@@ -29,6 +29,7 @@ System.Console.WriteLine("Hello, Charm!");
 #+end_src
 
 #+RESULTS:
+: Hello, Charm!
 
 
 
@@ -74,6 +75,7 @@ void main() {
 #+end_src
 
 #+RESULTS:
+: 
 : "Hello, World!"
 
 ** Fortran
@@ -136,9 +138,12 @@ print("Hello, World!")
 # NOTE: Hangs when running?
 #+begin_src ocaml :results output
 
-print_endline "Hello, World!";
+print_endline "Hello, World!";;
 
 #+end_src
+
+#+RESULTS:
+: Hello, World!
 
 
 ** Perl
@@ -199,7 +204,7 @@ fn main() {
 #+end_src
 
 #+RESULTS:
-: Hellos, World!
+: Hello, World!
 
 ** Tcl
 
