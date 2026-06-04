@@ -343,15 +343,26 @@ in more locations.
       (vterm (generate-new-buffer-name "*vterm*"))
     (ansi-term shell-file-name)))
 
+(defun mep/vterm-send-return ()
+  "Send RET to the active vterm process."
+  (interactive)
+  (when (derived-mode-p 'vterm-mode)
+    (vterm-send-return)))
+
 (use-package vterm
   :ensure nil
   :commands (vterm)
   :config
-  (setq vterm-shell shell-file-name))
+  (setq vterm-shell shell-file-name)
+  (define-key vterm-mode-map (kbd "RET") #'vterm-send-return)
+  (define-key vterm-mode-map (kbd "<return>") #'vterm-send-return))
 
 (with-eval-after-load 'evil
   (evil-ex-define-cmd "term" #'mep/open-terminal)
-  (evil-set-initial-state 'vterm-mode 'insert))
+  (evil-set-initial-state 'vterm-mode 'insert)
+  (evil-define-key '(insert normal emacs) vterm-mode-map
+    (kbd "RET") #'vterm-send-return
+    (kbd "<return>") #'vterm-send-return))
 #+END_SRC
 
 * all-the-icons 
