@@ -11,6 +11,12 @@
         system = system;
         overlays = [ (import overlay) ];
       };
+      iconFonts = [
+        pkgs.all-the-icons
+        pkgs.nerd-fonts.symbols-only
+        pkgs.nerd-fonts.ubuntu-mono
+      ];
+      fontConfig = pkgs.makeFontsConf { fontDirectories = iconFonts; };
       emacsPackages = pkgs.emacsPackagesFor pkgs.emacs-unstable;
       emacs = emacsPackages.emacsWithPackages (epkgs: [
         epkgs.vterm
@@ -27,6 +33,7 @@
         export PATH="${pkgs.libtool}/bin:$PATH"
         export PATH="${pkgs.R}/bin:$PATH"
         export PATH="${pkgs.php}/bin:$PATH"
+        export FONTCONFIG_FILE="${fontConfig}"
         cd "$CACHE_DIR"
         ${emacs}/bin/emacs --batch -l ./tangle-script.el
         exec ${emacs}/bin/emacs --init-dir "$CACHE_DIR" --chdir $HOME "$@"
@@ -42,7 +49,6 @@
         buildInputs = [
 
             emacs
-            pkgs.nerd-fonts.ubuntu-mono
             pkgs.libvterm
             pkgs.tree-sitter
             pkgs.cmake
@@ -52,8 +58,7 @@
             pkgs.R
             pkgs.php
             pkgs.copilot-language-server
-
-        ];
+        ] ++ iconFonts;
 
 
       };
