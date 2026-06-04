@@ -87,6 +87,10 @@ Various other settings I don't want to document right now:
 ;; Remove scrollbar
 (scroll-bar-mode -1) 
 
+;; Disable the GUI bell sound.
+(setq visible-bell nil
+      ring-bell-function #'ignore)
+
 ;; Display line/column numbers
 (display-line-numbers-mode)
 (column-number-mode t)

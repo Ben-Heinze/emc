@@ -54,6 +54,18 @@
             pkgs.copilot-language-server
 
         ];
+
+
       };
+
+      devShells.${system}.default = pkgs.mkShell {
+        packages = [
+          pkgs.python3
+        ];
+      };
+
+
+
+
     };
 }

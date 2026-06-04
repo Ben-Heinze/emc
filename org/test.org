@@ -1,0 +1,47 @@
+* Hello, World!
+
+
+** C
+
+#+begin_src C :results output
+
+#include <stdio.h>
+
+int main() {
+    printf("Hello, World!\n");
+    return 0;
+}
+
+#+end_src
+
+#+RESULTS:
+: Hello, World!
+
+
+
+** C++
+
+#+begin_src cpp :results output
+
+#include <iostream>
+
+int main() {
+    std::cout << "Hello, World!" << std::endl;
+    return 0;
+}
+
+#+end_src
+
+#+RESULTS:
+: Hello, World!
+
+** Python
+
+#+begin_src python :results output
+
+print("Hello, World!")
+
+#+end_src
+
+#+RESULTS:
+
