@@ -11,6 +11,10 @@
         system = system;
         overlays = [ (import overlay) ];
       };
+      emacsPackages = pkgs.emacsPackagesFor pkgs.emacs-unstable;
+      emacs = emacsPackages.emacsWithPackages (epkgs: [
+        epkgs.vterm
+      ]);
       emacsWrapper = pkgs.writeShellScriptBin "emacs-wrapper" ''
         #!/bin/sh
         CACHE_DIR="$HOME/.local/share/emc/"
@@ -24,32 +28,32 @@
         export PATH="${pkgs.R}/bin:$PATH"
         export PATH="${pkgs.php}/bin:$PATH"
         cd "$CACHE_DIR"
-        ${pkgs.emacs-unstable}/bin/emacs --batch -l ./tangle-script.el 
-        exec ${pkgs.emacs-unstable}/bin/emacs --init-dir "$CACHE_DIR" --chdir $HOME "$@"
+        ${emacs}/bin/emacs --batch -l ./tangle-script.el
+        exec ${emacs}/bin/emacs --init-dir "$CACHE_DIR" --chdir $HOME "$@"
       '';
     in
     {
-      packages.${system}.default = pkgs.emacs-unstable;
+      packages.${system}.default = emacs;
       apps.${system}.default = {
         type = "app";
         program = "${emacsWrapper}/bin/emacs-wrapper";
       };
       devShell = pkgs.mkShell {
         buildInputs = [
-	  pkgs.emacs-unstable
-	  pkgs.nerd-fonts.ubuntu-mono
-	  pkgs.libvterm
-	  pkgs.tree-sitter
-	  pkgs.cmake
-	  pkgs.gnumake
-	  pkgs.gcc
-	  pkgs.libtool
-	  pkgs.R
-	  pkgs.php
-	  pkgs.copilot-language-server
-	  pkgs.emacs
-	  ];
 
+            emacs
+            pkgs.nerd-fonts.ubuntu-mono
+            pkgs.libvterm
+            pkgs.tree-sitter
+            pkgs.cmake
+            pkgs.gnumake
+            pkgs.gcc
+            pkgs.libtool
+            pkgs.R
+            pkgs.php
+            pkgs.copilot-language-server
+
+        ];
       };
     };
 }

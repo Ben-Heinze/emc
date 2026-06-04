@@ -313,6 +313,47 @@ in more locations.
   (direnv-mode))
 #+END_SRC
 
+* terminal config
+
+#+BEGIN_SRC emacs-lisp :tangle init.el
+(defun mep/preferred-shell ()
+  "Return the best interactive shell executable for terminal buffers."
+  (let ((shell (getenv "SHELL")))
+    (cond
+     ((and shell (file-executable-p shell)) shell)
+     ((executable-find "bash"))
+     ((executable-find "sh"))
+     (t shell-file-name))))
+
+(setq shell-file-name (mep/preferred-shell)
+      explicit-shell-file-name shell-file-name)
+
+(when (string-match-p "bash\\'" (file-name-nondirectory shell-file-name))
+  (setq explicit-bash-args '("--login" "-i")))
+
+(when (string-match-p "zsh\\'" (file-name-nondirectory shell-file-name))
+  (setq explicit-zsh-args '("-i")))
+
+(setq vterm-shell shell-file-name)
+
+(defun mep/open-terminal ()
+  "Open a terminal in `default-directory', preferring `vterm'."
+  (interactive)
+  (if (fboundp 'vterm)
+      (vterm (generate-new-buffer-name "*vterm*"))
+    (ansi-term shell-file-name)))
+
+(use-package vterm
+  :ensure nil
+  :commands (vterm)
+  :config
+  (setq vterm-shell shell-file-name))
+
+(with-eval-after-load 'evil
+  (evil-ex-define-cmd "term" #'mep/open-terminal)
+  (evil-set-initial-state 'vterm-mode 'insert))
+#+END_SRC
+
 * all-the-icons 
 
 [[https://github.com/domtronn/all-the-icons.el][all-the-icons]] is a package that provides icons for various modes. I
@@ -723,7 +764,7 @@ Here's a collection of utility functions I use:
   (interactive)
   (split-window-below)
   (other-window 1)
-  (ansi-term (getenv "SHELL")))
+  (mep/open-terminal))
 #+END_SRC
 
 #+RESULTS:
@@ -1560,7 +1601,7 @@ easy project management and navigation.
   (other-window 1)
   (split-window-below)
   (windmove-down)
-  (term "/bin/bash")
+  (mep/open-terminal)
   (windmove-up)
 )
 (setq project-switch-commands #'my-project-open  )
@@ -2227,11 +2268,15 @@ Doomemacs has some nice [[https://github.com/doomemacs/themes][themes]]. I use `
 (use-package bash-completion
   :ensure (:host github :repo "szermatt/emacs-bash-completion")
   :config
-    (bash-completion-setup)
-    (add-hook 'eshell-mode-hook
-      (lambda ()
-        (add-hook 'completion-at-point-functions
-		  'bash-completion-capf-nonexclusive nil t))))
+    (bash-completion-setup))
+
+(use-package eshell
+  :ensure nil
+  :hook
+  (eshell-mode . (lambda ()
+                   (setq-local completion-at-point-functions
+                               (remq 'bash-completion-capf-nonexclusive
+                                     completion-at-point-functions)))))
 
 #+END_SRC
 
