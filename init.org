@@ -349,6 +349,16 @@ in more locations.
   (when (derived-mode-p 'vterm-mode)
     (vterm-send-return)))
 
+(defun mep/vterm-fix-evil-return ()
+  "Force RET to submit in vterm regardless of Evil state."
+  (when (boundp 'vterm-mode-map)
+    (define-key vterm-mode-map (kbd "RET") #'vterm-send-return)
+    (define-key vterm-mode-map (kbd "<return>") #'vterm-send-return))
+  (when (featurep 'evil)
+    (evil-define-key '(insert normal emacs) vterm-mode-map
+      (kbd "RET") #'vterm-send-return
+      (kbd "<return>") #'vterm-send-return)))
+
 (use-package vterm
   :ensure nil
   :commands (vterm)
@@ -356,14 +366,15 @@ in more locations.
   (setq vterm-shell shell-file-name)
   (define-key vterm-mode-map (kbd "RET") #'vterm-send-return)
   (define-key vterm-mode-map (kbd "<return>") #'vterm-send-return)
-  (add-hook 'vterm-mode-hook #'evil-emacs-state))
+  (add-hook 'vterm-mode-hook #'evil-emacs-state)
+  (add-hook 'vterm-mode-hook #'mep/vterm-fix-evil-return))
 
 (with-eval-after-load 'evil
   (evil-ex-define-cmd "term" #'mep/open-terminal)
-  (evil-set-initial-state 'vterm-mode 'emacs)
-  (evil-define-key '(emacs) vterm-mode-map
-    (kbd "RET") #'vterm-send-return
-    (kbd "<return>") #'vterm-send-return))
+  (evil-set-initial-state 'vterm-mode 'emacs))
+
+(with-eval-after-load 'evil-collection-vterm
+  (mep/vterm-fix-evil-return))
 #+END_SRC
 
 * all-the-icons 
