@@ -12,7 +12,6 @@
         overlays = [ (import overlay) ];
       };
       iconFonts = [
-        pkgs.all-the-icons
         pkgs.nerd-fonts.symbols-only
         pkgs.nerd-fonts.ubuntu-mono
       ];
