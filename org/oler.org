@@ -102,12 +102,6 @@ func main() {
 #+RESULTS:
 : Hello, World!
 
-** Guile
-
-#+begin_src scheme :results output
-(display "Hello, World!")
-#+end_src
-
 ** JavaScript
 #+begin_src js :results output
 console.log("Hello, World!");
@@ -219,5 +213,3 @@ echo "Hello, World!"
 
 
 
-csharp
-ocaml

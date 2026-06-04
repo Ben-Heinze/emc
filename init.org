@@ -2169,6 +2169,46 @@ $result = ["hello" => "world", "n" => 2 + 3];
 #+END_SRC
 
 
+#+BEGIN_SRC emacs-lisp :tangle init.el
+(defun my/scheme-implementation-config ()
+  (let* ((has-guile (executable-find "guile"))
+         (has-mit (or (executable-find "mit-scheme")
+                      (executable-find "scheme")))
+         (active (delq nil (list (when has-guile 'guile)
+                                 (when has-mit 'mit))))
+         (implementation (or (car active) 'guile))
+         (program (pcase implementation
+                    ('guile "guile")
+                    ('mit (if (executable-find "mit-scheme")
+                              "mit-scheme"
+                            "scheme"))
+                    (_ "guile"))))
+    `((implementation . ,implementation)
+      (active . ,active)
+      (program . ,program))))
+
+(use-package geiser
+  :ensure t
+  :init
+  (let* ((config (my/scheme-implementation-config))
+         (implementation (alist-get 'implementation config))
+         (active (alist-get 'active config))
+         (program (alist-get 'program config)))
+    (setq geiser-default-implementation implementation
+          geiser-scheme-implementation implementation
+          geiser-active-implementations active
+          scheme-program-name program)))
+
+(use-package geiser-guile
+  :ensure t
+  :after geiser)
+
+(use-package geiser-mit
+  :ensure t
+  :after geiser)
+#+END_SRC
+
+
 
 
 ** org mode
@@ -2184,6 +2224,7 @@ The biggest reason many choose to use emacs is [[https://orgmode.org/][org-mode]
     				  (C . t)
     				  (R . t)
     				  (csharp . t)
+    				  (scheme . t)
     				  (js . t)
     				  (octave . t)
     				  (shell . t)

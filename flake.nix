@@ -76,6 +76,9 @@
           pkgs.python3
           pkgs.ruby
           pkgs.cargo
+          pkgs.ocaml
+          pkgs.tcl
+          pkgs.guile
           pkgs.rustc
           pkgs.rust-script
           pkgs.lua
