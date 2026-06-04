@@ -32,11 +32,19 @@
         export PATH="${pkgs.libtool}/bin:$PATH"
         export PATH="${pkgs.R}/bin:$PATH"
         export PATH="${pkgs.php}/bin:$PATH"
+        export PATH="${pkgs.cargo}/bin:$PATH"
+        export PATH="${pkgs.rustc}/bin:$PATH"
+        export PATH="${pkgs.rust-script}/bin:$PATH"
         export FONTCONFIG_FILE="${fontConfig}"
         cd "$CACHE_DIR"
         ${emacs}/bin/emacs --batch -l ./tangle-script.el
         exec ${emacs}/bin/emacs --init-dir "$CACHE_DIR" --chdir $HOME "$@"
       '';
+      dotnetSdk =
+        if pkgs ? dotnet-sdk_10 then pkgs.dotnet-sdk_10
+        else if pkgs ? dotnet-sdk then pkgs.dotnet-sdk
+        else null;
+
     in
     {
       packages.${system}.default = emacs;
@@ -46,7 +54,6 @@
       };
       devShell = pkgs.mkShell {
         buildInputs = [
-
             emacs
             pkgs.libvterm
             pkgs.tree-sitter
@@ -58,18 +65,31 @@
             pkgs.php
             pkgs.copilot-language-server
         ] ++ iconFonts;
-
-
       };
 
       devShells.${system}.default = pkgs.mkShell {
         packages = [
+          pkgs.crystal
+          pkgs.gfortran
+          pkgs.go
+          pkgs.nodejs
           pkgs.python3
-        ];
+          pkgs.ruby
+          pkgs.cargo
+          pkgs.rustc
+          pkgs.rust-script
+          pkgs.lua
+          pkgs.php
+        ] ++ pkgs.lib.optionals (pkgs ? dotnet-sdk_10) [ pkgs.dotnet-sdk_10 ]
+          ++ pkgs.lib.optionals (pkgs ? mono) [ pkgs.mono ]
+          ++ pkgs.lib.optionals (pkgs ? dotnet-repl) [ pkgs.dotnet-repl ];
+        shellHook = ''
+            ${pkgs.lib.optionalString (dotnetSdk != null) ''
+              export DOTNET_ROOT="${dotnetSdk}/share/dotnet"
+              export DOTNET_ROOT_X64="$DOTNET_ROOT"
+              export PATH="$DOTNET_ROOT''${PATH:+:}$PATH"
+            ''}
+        '';
       };
-
-
-
-
     };
 }

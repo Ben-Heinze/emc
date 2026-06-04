@@ -2105,6 +2105,16 @@ Emacs interface.
   :ensure (:host github :repo "haskell/haskell-mode"))
 #+END_SRC
 
+
+
+* OCaml mode
+
+#+BEGIN_SRC emacs-lisp :tangle init.el
+(use-package tuareg
+  :ensure (:host github :repo "ocaml/tuareg"))
+#+END_SRC
+
+
 * apheleia
 
 #+BEGIN_SRC emacs-lisp :tangle init.el

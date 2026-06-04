@@ -1,6 +1,5 @@
 * Hello, World!
 
-
 ** C
 
 #+begin_src C :results output
@@ -19,6 +18,29 @@ int main() {
 
 
 
+** C#
+
+
+#+BEGIN_SRC csharp :results output :framework "net10.0"
+
+System.Console.WriteLine("Hello, Charm!");
+
+#+end_src
+
+#+RESULTS:
+: Hello, Charm!
+
+
+
+** Crystal
+
+#+begin_src crystal :results output
+puts "Hello, World!"
+#+end_src
+
+#+RESULTS:
+: Hello, World!
+
 ** C++
 
 #+begin_src cpp :results output
@@ -35,6 +57,91 @@ int main() {
 #+RESULTS:
 : Hello, World!
 
+** D
+
+# TODO: No org-babel support for D, so this is just a code snippet without results.
+#+begin_src d :results output
+import std.stdio;
+
+void main() {
+    writeln("Hello, World!");
+}
+#+end_src
+** Emacs Lisp
+
+#+begin_src emacs-lisp :results output
+(print "Hello, World!")
+#+end_src
+
+#+RESULTS:
+: 
+: "Hello, World!"
+
+** Fortran
+
+#+begin_src fortran :results output
+program hello
+    print *, "Hello, World!"
+end program hello
+#+end_src
+
+#+RESULTS:
+: Hello, World!
+
+** Go
+
+#+begin_src go :results output
+package main
+
+import "fmt"
+
+func main() {
+    fmt.Println("Hello, World!")
+}
+#+end_src
+
+#+RESULTS:
+: Hello, World!
+
+** JavaScript
+#+begin_src js :results output
+console.log("Hello, World!");
+#+end_src
+
+#+RESULTS:
+: Hello, World!
+
+** Lua
+
+#+begin_src lua :results output
+print("Hello, World!")
+#+end_src
+
+#+RESULTS:
+: Hello, World!
+
+
+** Perl
+
+#+begin_src perl :results output
+print "Hello, World!\n";
+#+end_src
+
+#+RESULTS:
+: Hello, World!
+
+
+** PHP
+
+#+begin_src php :results output
+<?php
+echo "Hello, World!";
+?>
+#+end_src
+
+#+RESULTS:
+: Hello, World!
+
 ** Python
 
 #+begin_src python :results output
@@ -44,4 +151,46 @@ print("Hello, World!")
 #+end_src
 
 #+RESULTS:
+: Hello, World!
 
+** R
+
+#+begin_src R :results output
+print("Hello, World!")
+#+end_src
+
+#+RESULTS:
+: [1] "Hello, World!"
+
+** Ruby
+
+#+begin_src ruby :results output
+puts "Hello, World!"
+#+end_src
+
+#+RESULTS:
+: Hello, World!
+** Rust
+
+#+begin_src rust :results output
+fn main() {
+    println!("Hello, World!");
+}
+#+end_src
+
+#+RESULTS:
+: Hellos, World!
+
+** Shell
+
+#+begin_src sh :results output
+echo "Hello, World!"
+#+end_src
+
+#+RESULTS:
+: Hello, World!
+
+
+
+csharp
+ocaml
