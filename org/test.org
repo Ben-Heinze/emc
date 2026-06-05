@@ -53,7 +53,6 @@ int main() {
 
 ** D
 
-# TODO: No org-babel support for D, so this is just a code snippet without results.
 #+begin_src d :results output
 import std.stdio;
 
@@ -61,6 +60,8 @@ void main() {
     writeln("Hello, World!");
 }
 #+end_src
+
+#+RESULTS:
 
 
 
