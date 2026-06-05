@@ -52,7 +52,6 @@ int main() {
 : Hello, World!
 
 ** D
-
 #+begin_src d :results output
 import std.stdio;
 
@@ -62,6 +61,7 @@ void main() {
 #+end_src
 
 #+RESULTS:
+: Hello, World!
 
 
 
