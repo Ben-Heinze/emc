@@ -3,14 +3,12 @@
 ** C
 
 #+begin_src C :results output
-
 #include <stdio.h>
 
 int main() {
     printf("Hello, World!\n");
     return 0;
 }
-
 #+end_src
 
 #+RESULTS:
@@ -22,10 +20,7 @@ int main() {
 
 
 #+BEGIN_SRC csharp :results output :framework "net10.0"
-
 System.Console.WriteLine("Hello, Charm!");
-
-
 #+end_src
 
 #+RESULTS:
@@ -45,14 +40,12 @@ puts "Hello, World!"
 ** C++
 
 #+begin_src cpp :results output
-
 #include <iostream>
 
 int main() {
     std::cout << "Hello, World!" << std::endl;
     return 0;
 }
-
 #+end_src
 
 #+RESULTS:
@@ -97,7 +90,7 @@ package main
 import "fmt"
 
 func main() {
-    fmt.Println("Hello, World!")
+  fmt.Println("Hello, World!")
 }
 #+end_src
 
@@ -135,11 +128,8 @@ print("Hello, World!")
 
 ** OCaml
 
-# NOTE: Hangs when running?
 #+begin_src ocaml :results output
-
 print_endline "Hello, World!";;
-
 #+end_src
 
 #+RESULTS:
@@ -155,7 +145,6 @@ print "Hello, World!\n";
 #+RESULTS:
 : Hello, World!
 
-
 ** PHP
 
 #+begin_src php :results output
@@ -170,9 +159,7 @@ echo "Hello, World!";
 ** Python
 
 #+begin_src python :results output
-
 print("Hello, World!")
-
 #+end_src
 
 #+RESULTS:
@@ -199,7 +186,7 @@ puts "Hello, World!"
 
 #+begin_src rust :results output
 fn main() {
-    println!("Hello, World!");
+  println!("Hello, World!");
 }
 #+end_src
 
@@ -225,7 +212,3 @@ echo "Hello, World!"
 #+RESULTS:
 : Hello, World!
 
-
-
-csharp
-ocaml

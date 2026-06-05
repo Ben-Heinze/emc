@@ -2152,6 +2152,22 @@ $result = ["hello" => "world", "n" => 2 + 3];
 #+end_src
 #+end_src
 
+*** D (org-babel)
+
+This repo also includes a small `ob-d.el` implementation to make `#+begin_src d` blocks work.
+
+- `:results output` (default): return stdout from `dmd -run`
+- `:results value`: set `result` in the block, and that value is returned
+- Sessions are not supported
+
+Example:
+
+#+begin_src org :tangle no
+#+begin_src d :results value
+int result = 2 + 3;
+#+end_src
+#+end_src
+
 *** ob-crystal
 
 #+BEGIN_SRC emacs-lisp :tangle init.el
@@ -2226,6 +2242,7 @@ The biggest reason many choose to use emacs is [[https://orgmode.org/][org-mode]
                                    (awk . t)
                                    (crystal . t)
                                    (csharp . t)
+                                   (d . t)
                                    (fortran . t)
                                    (go . t)
                                    (java . t)
@@ -2247,6 +2264,8 @@ The biggest reason many choose to use emacs is [[https://orgmode.org/][org-mode]
     				  )
     			       )
     (add-to-list 'load-path user-emacs-directory)
+    (require 'ob-d)
+    (setq org-babel-d-command "dmd")
     (require 'ob-php)
     (setq org-babel-php-command "php")
     (with-eval-after-load 'ob-ocaml
