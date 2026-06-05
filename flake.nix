@@ -31,7 +31,7 @@
         export PATH="${pkgs.gcc}/bin:$PATH"
         export PATH="${pkgs.libtool}/bin:$PATH"
         export PATH="${pkgs.R}/bin:$PATH"
-        export PATH="${pkgs.dmd}/bin:$PATH"
+        export PATH="${pkgs.ldc}/bin:$PATH"
         export PATH="${pkgs.php}/bin:$PATH"
         export PATH="${pkgs.cargo}/bin:$PATH"
         export PATH="${pkgs.rustc}/bin:$PATH"
@@ -63,7 +63,7 @@
             pkgs.gcc
             pkgs.libtool
             pkgs.R
-            pkgs.dmd
+            pkgs.ldc
             pkgs.php
             pkgs.copilot-language-server
         ] ++ iconFonts;
@@ -71,7 +71,7 @@
 
       devShells.${system}.default = pkgs.mkShell {
         packages = [
-          pkgs.dmd
+          pkgs.ldc
           pkgs.crystal
           pkgs.gfortran
           pkgs.go

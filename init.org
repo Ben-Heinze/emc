@@ -2156,7 +2156,7 @@ $result = ["hello" => "world", "n" => 2 + 3];
 
 This repo also includes a small `ob-d.el` implementation to make `#+begin_src d` blocks work.
 
-- `:results output` (default): return stdout from `dmd -run`
+- `:results output` (default): return stdout from `ldc2 -run`
 - `:results value`: set `result` in the block, and that value is returned
 - Sessions are not supported
 
@@ -2265,7 +2265,7 @@ The biggest reason many choose to use emacs is [[https://orgmode.org/][org-mode]
     			       )
     (add-to-list 'load-path user-emacs-directory)
     (require 'ob-d)
-    (setq org-babel-d-command "dmd")
+    (setq org-babel-d-command "ldc2")
     (require 'ob-php)
     (setq org-babel-php-command "php")
     (with-eval-after-load 'ob-ocaml
