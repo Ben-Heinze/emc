@@ -18,8 +18,8 @@
 
 (defun org-babel-execute:d (body params)
   "Execute D BODY according to PARAMS."
-  (let* ((src-file (org-babel-temp-file "d-" ".d"))
-         (bin-file (org-babel-temp-file "d-bin-" org-babel-exeext))
+  (let* ((src-file (org-babel-temp-file "ob_d_" ".d"))
+         (bin-file (org-babel-temp-file "ob_d_bin_" org-babel-exeext))
          (cmdline (cdr (assq :cmdline params)))
          (flags (cdr (assq :flags params)))
          (full-body (org-babel-expand-body:d body params src-file)))
