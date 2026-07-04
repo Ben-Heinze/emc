@@ -1,6 +1,6 @@
 * Mise En Place
 
-This is my personal emacs configuration. The configuration uses
+  This is a personal emacs configuration I forked from `github:jordanschupbach`. The configuration uses
 literate programming, so the main configuration file is init.org. The
 org file is tangled to generate the init.el file that emacs loads on
 startup. If you clone the repo, you can run the command in the justfile
@@ -14,7 +14,7 @@ The config is also maintained as a nix flake, so you can use the nix
 flake directly via:
 
 #+begin_src sh
-nix run --refresh "github:jordanschupbach/emc"
+nix run --refresh "github:Ben-Heinze/emc"
 #+end_src
 
 I just alias this command with the -nw flag in my shell configuration

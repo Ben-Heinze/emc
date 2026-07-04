@@ -1,5 +1,5 @@
 tangle:
-  nix develop . --command bash -c "emacs --batch -l ./tangle-script.el"
+  nix shell .#default --command emacs --batch -l ./tangle-script.el
 
 clean:
-  rm init.el
+  rm -f init.el

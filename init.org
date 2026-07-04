@@ -96,7 +96,9 @@ Various other settings I don't want to document right now:
 (column-number-mode t)
 
 ;; Include dividers
-(menu-bar-bottom-and-right-window-divider)
+(setq window-divider-default-places t
+      window-divider-default-right-width 3
+      window-divider-default-bottom-width 3)
 (window-divider-mode)
 
 ;; reverts any buffer associated with a file when the file changes on disk
@@ -2514,6 +2516,11 @@ Doomemacs has some nice [[https://github.com/doomemacs/themes][themes]]. I use `
 
 (custom-set-faces '(tab-bar ((t (:height 0.8)))))
 (set-face-attribute 'tab-bar nil :height 120)
+
+;; Window divider colors (applied after theme so they aren't overridden)
+(set-face-attribute 'window-divider nil :foreground "#5c6395")
+(set-face-attribute 'window-divider-first-pixel nil :foreground "#4a5280")
+(set-face-attribute 'window-divider-last-pixel nil :foreground "#6e78aa")
 
 ;; (setq tab-bar-close-button-show t
 ;;       tab-bar-new-button-show t)
