@@ -2530,6 +2530,14 @@ Doomemacs has some nice [[https://github.com/doomemacs/themes][themes]]. I use `
 ;;           (concat "  " name "  "))))
 #+END_SRC
 
+* ESS
+
+#+BEGIN_SRC emacs-lisp :tangle init.el
+(use-package ess
+  :ensure nil
+  :demand t)
+#+END_SRC
+
 * Rainbow-mode
 
 #+BEGIN_SRC emacs-lisp :tangle init.el
